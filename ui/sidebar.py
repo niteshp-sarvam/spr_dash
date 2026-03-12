@@ -3,7 +3,7 @@ import streamlit as st
 from core.config import ENVIRONMENTS
 
 
-def render_sidebar() -> str:
+def render_sidebar(authenticator) -> str:
     """Render the shared sidebar and return the selected environment name."""
     with st.sidebar:
         st.title("SPR Tool")
@@ -25,6 +25,8 @@ def render_sidebar() -> str:
         st.caption(f"App ID: `{env_cfg['app_id']}`")
 
         st.divider()
-        st.caption("Sarvam Parse Records Manager")
+
+        st.caption(f"Signed in as **{st.session_state.get('name', '')}**")
+        authenticator.logout("Sign out", location="sidebar")
 
     return env

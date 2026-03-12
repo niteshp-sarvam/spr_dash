@@ -1,4 +1,6 @@
 import streamlit as st
+import streamlit_authenticator as stauth
+import yaml
 
 st.set_page_config(
     page_title="SPR Tool",
@@ -7,10 +9,21 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+CREDENTIALS_PATH = "config/credentials.yaml"
+
+authenticator = stauth.Authenticate(CREDENTIALS_PATH)
+
+authenticator.login()
+
+if not st.session_state.get("authentication_status"):
+    if st.session_state.get("authentication_status") is False:
+        st.error("Incorrect username or password.")
+    st.stop()
+
 from ui.sidebar import render_sidebar
 from pages import get_spr, update_spr, bulk_operations
 
-env = render_sidebar()
+env = render_sidebar(authenticator)
 
 page = st.navigation(
     [
